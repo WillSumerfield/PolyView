@@ -5,37 +5,41 @@ from polyview.dimension import *
 from polyview.dimension_selector import *
 import colour
 
+
 class Graph:
 
     range_padding = 0.2
 
-    def __init__(self, title, array, canvas, notch_count=10):
+    def __init__(self, title, dataframe, canvas, notch_count=10):
 
         # region Parameter Setting
 
         self.title = title
-        self.array = array
+        self.dataframe = dataframe
         self.canvas = canvas
         self.notch_count = notch_count
 
         # endregion
 
-        # region Constants
-
-        # endregion
-
         # region Starting Variables
+
+        # Number of Columns
+        columns = self.dataframe.columns.__len__()
 
         # The starting rotation of this graph
         self.x_rotation = 0
         self.y_rotation = 0
 
-        # Generate Colors
+        # Randomly Create Colors
         starting_color = random.random()
-        color_list = np.array(colour.Color(hue=1 % (starting_color + (i/10)), saturation=1, luminance=1) for i in range(10))
+        color_list = [None] * columns
+        for i in range(columns):
+            color_list[i] = colour.Color(hsl=((starting_color + (i/columns)) % 1, 1, 0.5))
 
         # For every dimension, assign it a color
-        self.Dimensions = np.array((dimension, color) for dimension, color in (array, color_list))
+        self.Dimensions = [(0, 0)] * columns
+        for i in range(columns):
+            self.Dimensions[i] = (self.dataframe.columns[i], color_list[i])
 
         # endregion
 
