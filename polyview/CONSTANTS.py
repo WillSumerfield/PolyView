@@ -34,12 +34,9 @@ FRAME_SIZE = 2
 TEXT_HEIGHT = 16
 TEXT_WIDTH = 4
 
-TEXT_HALF_WIDTH = round(TEXT_WIDTH/2)
-TEXT_HALF_HEIGHT = round(TEXT_HEIGHT/2)
-
 # Extra space between the bar and the number text
 HORIZONTAL_TEXT_PADDING = 4
-VERTICAL_TEXT_PADDING = 6
+VERTICAL_TEXT_PADDING = 4
 
 # endregion Text
 
@@ -75,5 +72,18 @@ VERTICAL_TEXT_STARTING_Y = VERTICAL_BAR_Y + VERTICAL_BAR_HEIGHT - TEXT_HEIGHT
 VERTICAL_TEXT_NOTCH_SPACING = round(VERTICAL_BAR_HEIGHT / NOTCHES)
 
 # endregion
+
+# endregion
+
+# region Points
+
+POINT_SIZE = 2
+POINT_COLOR = 'black'
+
+# endregion
+
+# region Grid
+
+GRID_COLOR = 'light gray'
 
 # endregion

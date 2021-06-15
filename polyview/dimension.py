@@ -38,6 +38,22 @@ class Dimension:
 
         # endregion
 
+        # region Variables
+
+        self.min = min(array)
+        self.max = max(array)
+
+        # The range of the data
+        self.range = self.max - self.min
+
+        # endregion Variables
+
+    def graph_x_to_real(self, x):
+        return GRAPH_X + (((WINDOW_WIDTH - GRAPH_X)/self.range) * (x - self.min))
+
+    def graph_y_to_real(self, y):
+        return GRAPH_Y - ((GRAPH_Y/self.range) * (y - self.min))
+
     def get_notch_x(self, index):
         """ Get the x position of a horizontal notch
 
@@ -99,10 +115,10 @@ class Dimension:
 
             # Draw Number
             self.canvas.create_text(
-                notch_x - TEXT_HALF_WIDTH,  # X Position
-                HORIZONTAL_TEXT_Y,          # Y Position
-                text=str(i),                # Text
-                anchor=tk.NW                # Cardinal Centering
+                notch_x,                                  # X Position
+                HORIZONTAL_TEXT_Y,                                          # Y Position
+                text=str(round(self.min + ((i / NOTCHES) * self.range))),   # Text
+                anchor=tk.N                                                # Cardinal Centering
             )
 
     def draw_vertical(self):
@@ -137,8 +153,8 @@ class Dimension:
 
             # Draw Number
             self.canvas.create_text(
-                VERTICAL_TEXT_X,                # X Position
-                notch_y - TEXT_HALF_HEIGHT,     # Y Position
-                text=str(i),                    # Text
-                anchor=tk.NW                    # Cardinal Centering
+                VERTICAL_TEXT_X,                                            # X Position
+                notch_y,                                 # Y Position
+                text=str(round(self.min + ((i / NOTCHES) * self.range))),   # Text
+                anchor=tk.E                                                # Cardinal Centering
             )
