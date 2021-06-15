@@ -2,6 +2,7 @@ import tkinter as tk
 import numpy as np
 from polyview.graph import *
 import pandas as pd
+from polyview.CONSTANTS import *
 
 # region Window Creation
 
@@ -18,7 +19,7 @@ root.title("PolyView")
 
 # region Canvas Creation
 
-graph_canvas = tk.Canvas(root, bg="white", height=512, width=512, highlightthickness=0)
+graph_canvas = tk.Canvas(root, bg="white", height=WINDOW_WIDTH, width=WINDOW_HEIGHT, highlightthickness=0)
 graph_canvas.pack()
 root.update()
 

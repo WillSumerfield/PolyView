@@ -37,14 +37,20 @@ class Graph:
             color_list[i] = colour.Color(hsl=((starting_color + (i/columns)) % 1, 1, 0.5))
 
         # For every dimension, assign it a color
-        self.Dimensions = [(0, 0)] * columns
+        self.dimensions = [(0, 0)] * columns
         for i in range(columns):
-            self.Dimensions[i] = (self.dataframe.columns[i], color_list[i])
+            self.dimensions[i] = (self.dataframe.columns[i], color_list[i])
+
+        # Create a Dimension Selector
+        #self.selector = DimensionSelector(self.canvas, self.dimensions)
+
+        # Create a starting horizontal dimension
+        self.horizontal_dimension = Dimension(self.canvas, self.dataframe[self.dataframe.columns[0]])
+        self.vertical_dimension = Dimension(self.canvas, self.dataframe[self.dataframe.columns[1]])
 
         # endregion
 
     def draw(self):
-        dim = Dimension(self.canvas, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 10)
-        dim.draw_horizontal()
-        selector = DimensionSelector(self.canvas, self.Dimensions)
-        selector.draw_horizontal()
+        self.horizontal_dimension.draw_horizontal()
+        self.vertical_dimension.draw_vertical()
+        #self.selector.draw_horizontal()

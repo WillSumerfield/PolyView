@@ -84,15 +84,16 @@ class DimensionSelector:
         """
 
         # Draw all Dimensions
-        for i in range(DIMENSIONS_SHOWN):
+        dimensions_shown = min(MAX_DIMENSIONS_SHOWN, self.dimensions.__len__())
+        for i in range(dimensions_shown):
 
             # Get Dimension
-            dim = self.dimensions[self.current_dimension_index + i - math.floor(DIMENSIONS_SHOWN / 2)]
+            dim = self.dimensions[self.current_dimension_index + i - math.floor(dimensions_shown / 2)]
 
             # Draw Dimension
             self.draw_dimension(
-                DIMENSION_SELECTOR_SPACING + i * (DIMENSION_SIZE + DIMENSION_PADDING), 8,   # Top Left
-                dim                                                                         # Dimension
+                DIMENSION_SELECTOR_SPACING + i * (DIMENSION_SIZE + DIMENSION_PADDING), self.canvas.winfo_height() - DIMENSION_PADDING - DIMENSION_SIZE,     # Top Left
+                dim                                                                                                                                         # Dimension
             )
 
     def draw_vertical(self):
@@ -115,7 +116,7 @@ class DimensionSelector:
 
         """
 
-        # Draw Rounded Rectangle
+        # Draw Icon
         self.round_rectangle(
             x,                  y,                      # Top Left
             x + DIMENSION_SIZE, y + DIMENSION_SIZE,     # Bottom Right
@@ -126,5 +127,6 @@ class DimensionSelector:
         self.canvas.create_text(
             x + (DIMENSION_SIZE/2),     # Center X
             y + (DIMENSION_SIZE/2),     # Center Y
-            text=dimension[0]           # Dimension Label Text
+            text=dimension[0],          # Dimension Label Text
+            font=('arial', 8)
             )
