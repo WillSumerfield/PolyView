@@ -38,8 +38,37 @@ class Dimension:
 
         # endregion
 
+    def get_notch_x(self, index):
+        """ Get the x position of a horizontal notch
+
+        Parameter Types:
+
+        INDEX is an integer
+
+        Parameter Descriptions:
+
+        INDEX is the notch index
+
+        """
+
+        return HORIZONTAL_TEXT_STARTING_X + (index * HORIZONTAL_TEXT_NOTCH_SPACING)
+
+    def get_notch_y(self, index):
+        """ Get the y position of a vertical notch
+
+        Parameter Types:
+
+        INDEX is an integer
+
+        Parameter Descriptions:
+
+        INDEX is the notch index
+
+        """
+        return VERTICAL_BAR_Y + VERTICAL_BAR_HEIGHT - FRAME_SIZE - (index * VERTICAL_TEXT_NOTCH_SPACING)
+
     def draw_horizontal(self):
-        """ Draw the Dimension Horizontally
+        """ Draw the Dimension horizontally
 
         This function is called by its graph to draw the dimension
 
@@ -58,14 +87,15 @@ class Dimension:
         for i in range(NOTCHES):
 
             # Get Notch X
-            notch_x = HORIZONTAL_TEXT_STARTING_X + (i * HORIZONTAL_TEXT_NOTCH_SPACING)
+            notch_x = self.get_notch_x(i)
 
             # Draw Notch
-            self.canvas.create_line(
-                notch_x, HORIZONTAL_BAR_Y - NOTCH_LENGTH,   # Top, X adjusted for text width
-                notch_x, HORIZONTAL_BAR_Y,                  # Bottom
-                fill=self.color                             # Color
-            )
+            if (i != 0):
+                self.canvas.create_line(
+                    notch_x, HORIZONTAL_BAR_Y - NOTCH_LENGTH,   # Top, X adjusted for text width
+                    notch_x, HORIZONTAL_BAR_Y,                  # Bottom
+                    fill=self.color                             # Color
+                )
 
             # Draw Number
             self.canvas.create_text(
@@ -95,14 +125,15 @@ class Dimension:
         for i in range(NOTCHES):
 
             # Get Notch Y
-            notch_y = VERTICAL_BAR_Y + VERTICAL_BAR_HEIGHT - FRAME_SIZE - (i * VERTICAL_TEXT_NOTCH_SPACING)
+            notch_y = self.get_notch_y(i)
 
             # Draw Notch
-            self.canvas.create_line(
-                VERTICAL_BAR_X + FRAME_SIZE,                notch_y,    # Top, Y adjusted for text height
-                VERTICAL_BAR_X + NOTCH_LENGTH + FRAME_SIZE, notch_y,    # Bottom, Y adjusted for text height
-                fill=self.color                                         # Color
-            )
+            if (i != 0):
+                self.canvas.create_line(
+                    VERTICAL_BAR_X + FRAME_SIZE,                notch_y,    # Top, Y adjusted for text height
+                    VERTICAL_BAR_X + NOTCH_LENGTH + FRAME_SIZE, notch_y,    # Bottom, Y adjusted for text height
+                    fill=self.color                                         # Color
+                )
 
             # Draw Number
             self.canvas.create_text(

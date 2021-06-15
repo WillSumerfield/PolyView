@@ -24,7 +24,7 @@ MAX_DIMENSIONS_SHOWN = 7
 NOTCHES = 10
 
 # The length of the Notches
-NOTCH_LENGTH = 2
+NOTCH_LENGTH = 12
 
 # The size of the graph's frames
 FRAME_SIZE = 2
