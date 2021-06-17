@@ -8,8 +8,6 @@ import colour
 
 class Graph:
 
-    range_padding = 0.2
-
     def __init__(self, title, dataframe, canvas, notch_count=10):
 
         # region Parameter Setting
@@ -51,6 +49,7 @@ class Graph:
         # endregion
 
     def draw_grid(self):
+
         # Draw Horizontal Lines
         for i in range(NOTCHES):
             self.canvas.create_line(

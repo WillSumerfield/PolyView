@@ -9,6 +9,7 @@ It has draw functions for both horizontal and vertical drawings, which draw the 
 import tkinter as tk
 import numpy as np
 from polyview.CONSTANTS import *
+import math
 
 
 class Dimension:
@@ -40,19 +41,79 @@ class Dimension:
 
         # region Variables
 
-        self.min = min(array)
-        self.max = max(array)
+        # The min and max points in the array
+        self.point_min = min(array)
+        self.point_max = max(array)
 
         # The range of the data
-        self.range = self.max - self.min
+        self.point_range = self.point_max - self.point_min
+
+        # The min and max values the graph shows
+        self.graph_min = self.point_min - (GRID_PADDING * self.point_range)
+        self.graph_max = self.point_max + (GRID_PADDING * self.point_range)
+
+        # The range of values the graph can show
+        self.graph_range = self.graph_max - self.graph_min
+
+        # The significant figures to display the notch text to
+        self.sigfigs = max(-math.ceil(math.log(self.point_range, 10)) + 3, 0)
 
         # endregion Variables
 
+    def get_number(self, index):
+        """ Return the number at the given index as a string.
+        The number will have sigfigs proportional to the range of the data.
+
+        Parameter Types:
+
+        INDEX is an integer
+
+        Parameter Descriptions:
+
+        INDEX is the notch index
+
+        """
+
+        # Get number to draw
+        num = self.point_min + ((index / (NOTCHES-1)) * self.point_range)
+
+        # Round the number to the correct number of digits
+        num = round(num, self.sigfigs)
+
+        # Set the number to a string with the correct number of digits
+        string = ('{0:.' + str(self.sigfigs) + 'f}').format(num)
+
+        return string
+
     def graph_x_to_real(self, x):
-        return GRAPH_X + (((WINDOW_WIDTH - GRAPH_X)/self.range) * (x - self.min))
+        """ Get the real x position from a graph position
+
+        Parameter Types:
+
+        X is a number
+
+        Parameter Descriptions:
+
+        X is the graph position from which to get the real position
+
+        """
+
+        return GRAPH_X + (((WINDOW_WIDTH - GRAPH_X)/self.graph_range) * (x - self.graph_min))
 
     def graph_y_to_real(self, y):
-        return GRAPH_Y - ((GRAPH_Y/self.range) * (y - self.min))
+        """ Get the real y position from a graph position
+
+        Parameter Types:
+
+        Y is a number
+
+        Parameter Descriptions:
+
+        Y is the graph position from which to get the real position
+
+        """
+
+        return GRAPH_Y - ((GRAPH_Y/self.graph_range) * (y - self.graph_min))
 
     def get_notch_x(self, index):
         """ Get the x position of a horizontal notch
@@ -67,7 +128,7 @@ class Dimension:
 
         """
 
-        return HORIZONTAL_TEXT_STARTING_X + (index * HORIZONTAL_TEXT_NOTCH_SPACING)
+        return self.graph_x_to_real(self.point_min + (index * (self.point_range/(NOTCHES-1))))
 
     def get_notch_y(self, index):
         """ Get the y position of a vertical notch
@@ -81,7 +142,7 @@ class Dimension:
         INDEX is the notch index
 
         """
-        return VERTICAL_BAR_Y + VERTICAL_BAR_HEIGHT - FRAME_SIZE - (index * VERTICAL_TEXT_NOTCH_SPACING)
+        return self.graph_y_to_real(self.point_min + (index * (self.point_range/(NOTCHES-1))))
 
     def draw_horizontal(self):
         """ Draw the Dimension horizontally
@@ -106,19 +167,18 @@ class Dimension:
             notch_x = self.get_notch_x(i)
 
             # Draw Notch
-            if (i != 0):
-                self.canvas.create_line(
-                    notch_x, HORIZONTAL_BAR_Y - NOTCH_LENGTH,   # Top, X adjusted for text width
-                    notch_x, HORIZONTAL_BAR_Y,                  # Bottom
-                    fill=self.color                             # Color
-                )
+            self.canvas.create_line(
+                notch_x, HORIZONTAL_BAR_Y - NOTCH_LENGTH,   # Top, X adjusted for text width
+                notch_x, HORIZONTAL_BAR_Y,                  # Bottom
+                fill=self.color                             # Color
+            )
 
             # Draw Number
             self.canvas.create_text(
-                notch_x,                                  # X Position
+                notch_x,                                                    # X Position
                 HORIZONTAL_TEXT_Y,                                          # Y Position
-                text=str(round(self.min + ((i / NOTCHES) * self.range))),   # Text
-                anchor=tk.N                                                # Cardinal Centering
+                text=self.get_number(i),   # Text
+                anchor=tk.N                                                 # Cardinal Centering
             )
 
     def draw_vertical(self):
@@ -144,17 +204,20 @@ class Dimension:
             notch_y = self.get_notch_y(i)
 
             # Draw Notch
-            if (i != 0):
-                self.canvas.create_line(
-                    VERTICAL_BAR_X + FRAME_SIZE,                notch_y,    # Top, Y adjusted for text height
-                    VERTICAL_BAR_X + NOTCH_LENGTH + FRAME_SIZE, notch_y,    # Bottom, Y adjusted for text height
-                    fill=self.color                                         # Color
-                )
+            self.canvas.create_line(
+                VERTICAL_BAR_X + FRAME_SIZE,                notch_y,    # Top, Y adjusted for text height
+                VERTICAL_BAR_X + NOTCH_LENGTH + FRAME_SIZE, notch_y,    # Bottom, Y adjusted for text height
+                fill=self.color                                         # Color
+            )
 
-            # Draw Number
+            # region Draw Number
+
+            # Draw the number
             self.canvas.create_text(
                 VERTICAL_TEXT_X,                                            # X Position
                 notch_y,                                 # Y Position
-                text=str(round(self.min + ((i / NOTCHES) * self.range))),   # Text
+                text=self.get_number(i),   # Text
                 anchor=tk.E                                                # Cardinal Centering
             )
+
+            # endregion
